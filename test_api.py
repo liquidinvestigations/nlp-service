@@ -1,7 +1,7 @@
 from urllib.parse import urljoin
 import requests
 
-NLP_URL = 'http://127.0.0.1:5000/'
+NLP_URL = 'http://127.0.0.1:5001/'
 
 def call_nlp_server(endpoint, data_dict):
     url = urljoin(NLP_URL, endpoint)
