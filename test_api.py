@@ -11,7 +11,7 @@ def call_nlp_server(endpoint, data_dict):
         raise RuntimeError(f"Unexpected response from nlp service: {resp}")
     return resp
 
-def get_entities_from_service(text, language='en'):
+def get_entities_from_service(text, language=None):
     data = {'text': text}
     if language:
         data['language']= language
