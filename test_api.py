@@ -8,7 +8,7 @@ def call_nlp_server(endpoint, data_dict):
     resp = requests.post(url, json=data_dict)
     if (resp.status_code != 200
             or resp.headers['Content-Type'] != 'application/json'):
-        raise RuntimeError(f"Unexpected response from nlp service: {resp}")
+        raise RuntimeError(f'Unexpected response from nlp service: {resp.content}')
     return resp
 
 def get_entities_from_service(text, language=None):
