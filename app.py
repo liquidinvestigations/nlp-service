@@ -45,10 +45,16 @@ def get_entities():
             method = 'polyglot'
             poly_text = Text(text, hint_language_code=lan)
             ents = []
+            spans = []
+            # Each entity is only once inside the list and then matched. This is done because Polyglot only knows words, not char indexes.
             entity_text = list(set([(' '.join(entity),entity.tag.lstrip('I-')) for entity in poly_text.entities]))
+            entity_text.sort(key=len, reverse=True)
             for entity in entity_text:
                 for match in re.finditer(entity[0], text):
-                    ents.append({'text': entity[0], 'start': match.start(), 'end': match.end(), 'label': entity[1]})
+                    # the match is only a match if it's not inside another match. Therefore, the entities are ordered by length beforehand.
+                    if all(not(span[0] <= match.start() <= span[1]) and not(span[0] <= match.end() <= span[1]) for span in spans):
+                        spans.append((match.start(),match.end()))
+                        ents.append({'text': entity[0], 'start': match.start(), 'end': match.end(), 'label': entity[1]})
         else:
             return 'language is not supported', 501
         response = {'language': lan, 'method':method, 'entities': ents}
