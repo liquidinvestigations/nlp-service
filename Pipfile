@@ -11,6 +11,11 @@ spacy-lookups-data = "*"
 flask = "*"
 spacy-nightly = "*"
 gunicorn = "*"
+polyglot = "*"
+pycld2 = "*"
+morfessor = "*"
+pyicu = "*"
+six = "*"
 
 [requires]
 python_version = "3.8"

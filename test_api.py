@@ -12,7 +12,9 @@ def call_nlp_server(endpoint, data_dict):
     return resp
 
 def get_entities_from_service(text, language='en'):
-    data = {'text': text, 'lan': language}
+    data = {'text': text}
+    if language:
+        data['language']= language
     resp = call_nlp_server('entity_extraction', data)
     entity_list = resp.json()
     return entity_list

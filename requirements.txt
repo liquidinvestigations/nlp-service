@@ -1,42 +1,40 @@
-astroid==2.4.2
+-i https://pypi.org/simple
 blis==0.7.4
-catalogue==2.0.1
+catalogue==2.0.1; python_version >= '3.6'
 certifi==2020.12.5
-chardet==4.0.0
-click==7.1.2
+chardet==4.0.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+click==7.1.2; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
 cymem==2.0.5
-en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0a1/en_core_web_sm-3.0.0a1.tar.gz
-Flask==1.1.2
+flask==1.1.2
 gunicorn==20.0.4
-idna==2.10
-isort==5.7.0
-itsdangerous==1.1.0
-Jinja2==2.11.2
-lazy-object-proxy==1.4.3
-MarkupSafe==1.1.1
-mccabe==0.6.1
+idna==2.10; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+itsdangerous==1.1.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+jinja2==2.11.3; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+markupsafe==1.1.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+morfessor==2.0.6
 murmurhash==1.0.5
-numpy==1.19.5
-packaging==20.8
-pathy==0.3.4
-plac==1.1.3
+numpy==1.20.0; python_version >= '3.7'
+packaging==20.9; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+pathy==0.3.4; python_version >= '3.6'
+polyglot==16.7.4
 preshed==3.0.5
-pydantic==1.7.3
-pylint==2.6.0
-pyparsing==2.4.7
-requests==2.25.1
+pycld2==0.41
+pydantic==1.7.3; python_version >= '3.6'
+pyicu==2.6
+pyparsing==2.4.7; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'
+requests==2.25.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
 six==1.15.0
-smart-open==3.0.0
-spacy-legacy==3.0.0.dev0
-spacy-lookups-data==0.3.2
-spacy-nightly==3.0.0rc3
-srsly==2.3.2
-thinc==8.0.0rc4
-toml==0.10.2
-tqdm==4.56.0
-typer==0.3.2
-urllib3==1.26.2
-wasabi==0.8.0
-Werkzeug==1.0.1
-wrapt==1.12.1
+smart-open==3.0.0; python_version >= '3.5'
+spacy-legacy==3.0.1; python_version >= '3.6'
+spacy-lookups-data==1.0.0
+spacy-nightly==3.0.0rc5
+srsly==2.4.0; python_version >= '3.6'
+thinc==8.0.1; python_version >= '3.6'
+tqdm==4.56.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+typer==0.3.2; python_version >= '3.6'
+urllib3==1.26.3; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'
+wasabi==0.8.2
+werkzeug==1.0.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0a1/en_core_web_sm-3.0.0a1.tar.gz
 xx-ent-wiki-sm @ https://github.com/explosion/spacy-models/releases/download/xx_ent_wiki_sm-3.0.0a1/xx_ent_wiki_sm-3.0.0a1.tar.gz
