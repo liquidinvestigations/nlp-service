@@ -56,7 +56,8 @@ def get_entities():
                         spans.append((match.start(),match.end()))
                         ents.append({'text': entity[0], 'start': match.start(), 'end': match.end(), 'label': entity[1]})
         else:
-            return 'language is not supported', 501
+            method = 'not supported'
+            ents = None
         response = {'language': lan, 'method':method, 'entities': ents}
         return jsonify(response), 200
                     
