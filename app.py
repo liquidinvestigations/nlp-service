@@ -61,6 +61,13 @@ def get_entities():
         response = {'language': lan, 'method':method, 'entities': ents}
         return jsonify(response), 200
                     
+@app.route('/language_detection', methods=['POST'])
+def return_language():
+    if not request.json or not 'text' in request.json:
+        abort(400)
+    language =  get_language(request.json['text'])
+    return jsonify({'language': language}), 200
+
 
 
 if __name__ == "__main__":
