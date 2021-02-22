@@ -1,6 +1,5 @@
 from urllib.parse import urljoin
 import requests
-import pytest
 
 NLP_URL = 'http://127.0.0.1:5001/'
 
@@ -59,22 +58,6 @@ def get_language(text):
     return language
 
 
-def extract_enitities(text, text_source, digest):
-    # TODO: Add entity Extraction setting to snoop settings
-    nlp_response = get_entities(text)
-    ents = nlp_response['entities']
-    results = {}
-    results['lang'] = nlp_response['language']
-    results['entities'] = [k['text'] for k in ents]
-    unique_ents = set([(k['text'], k['type']) for k in ents])
-    for entity_type in set(v['type'] for v in results['entities']):
-        results[f'entity-type.{entity_type}'] = [k[0] for k in unique_ents
-                                                 if k[1] == entity_type]
-    text = text[:2500]
-    results['lang'] = get_language(text[:2500])
-    return results
-
-
 def get_entities_from_service(text, language=None):
     data = {'text': text}
     if language:
@@ -95,4 +78,3 @@ def test_entity_extraction():
         assert response['language'] == case[1]
         assert response['method'] == case[2]
         assert len(response['entities']) == case[3]
-
