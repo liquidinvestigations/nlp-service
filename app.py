@@ -8,7 +8,6 @@ from flask import Flask, request, jsonify, abort
 nlp = spacy.load('xx_ent_wiki_sm')
 nlp_en = spacy.load('en_core_web_sm')
 POLY_PATH = "/root/polyglot_data/ner2"
-supported_ner_polyglot = [name for name in os.listdir(POLY_PATH)]
 supported_ner_spacy = ['nl', 'en', 'fr', 'de', 'it', 'pl', 'pt', 'ru', 'es']
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
@@ -25,6 +24,7 @@ def get_language(text):
 
 @app.route('/entity_extraction', methods=['POST'])
 def get_entities():
+    supported_ner_polyglot = [name for name in os.listdir(POLY_PATH)]
     if not request.json or 'text' not in request.json:
         abort(400)
     text = request.json['text']
@@ -84,5 +84,4 @@ if __name__ == "__main__":
     elif len(sys.argv) > 2:
         print(f'unknown argument(s) {sys.argv[2:]}')
         exit(-1)
-    supported_ner_polyglot = [name for name in os.listdir(POLY_PATH)]
     app.run()
