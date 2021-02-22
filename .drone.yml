@@ -8,7 +8,7 @@ steps:
   - flake8
 
 - name: test
-  image: python:3.9-buster
+  image: python:3.9.2-buster
   commands:
   - apt-get update -yqq
   - pip install flake8 pipenv > /dev/null
