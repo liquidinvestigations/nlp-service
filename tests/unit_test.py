@@ -1,9 +1,6 @@
-from urllib.parse import urljoin
 import pytest
-import requests
 import app
 
-NLP_URL = 'http://127.0.0.1:5000/'
 
 # test cases are tuples consisting of (text, language code, method used, number of found entities)
 test_cases = [
