@@ -62,8 +62,11 @@ steps:
 kind: pipeline
 name: integration-test
 
+depends_on:
+- publish
+
 services:
-  - name: nlp-service
+- name: nlp-service
   image: liquidinvestigations/nlp-service:${DRONE_COMMIT_BRANCH}
 
 steps:
@@ -73,9 +76,6 @@ steps:
   - apt-get update -yqq
   - pip install pytest
   - pytest -v tests/integration_test.py
-
-depends_on:
-- publish
 
 ---
 kind: secret
