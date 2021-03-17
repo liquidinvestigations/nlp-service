@@ -7,4 +7,3 @@ from app import get_app
 def app():
     app = get_app()
     return app
-
