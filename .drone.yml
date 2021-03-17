@@ -34,6 +34,25 @@ depends_on:
 - unittest
 
 steps:
+
+- name: build base docker image
+  image: plugins/docker
+  settings:
+    repo: liquidinvestigations/hoover-snoop2
+    auto_tag: true
+    auto_tag_suffix: base
+    dockerfile: Dockerfile.base
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+  when:
+    event:
+    - push
+    - tag
+    branch:
+    - master
+
 - name: docker push branch ${DRONE_COMMIT_BRANCH}
   image: plugins/docker
   settings:
