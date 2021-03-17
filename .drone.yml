@@ -11,11 +11,7 @@ trigger:
   - push
   - tag
 
-depends_on:
-- unittest
-
 steps:
-
 - name: flake8
   image: alpine/flake8:3.7.7
   commands:
@@ -87,7 +83,7 @@ steps:
   - polyglot download --dir /root/polyglot_data/beddings2.da embeddings2.ro
   - pip install -e .
   - cp config/default.conf config/app.conf
-  - pytest -v tests/unit_test.py
+  - py.test
 
 
 ---
