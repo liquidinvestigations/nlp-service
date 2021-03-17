@@ -45,8 +45,8 @@ steps:
   image: plugins/docker
   settings:
     repo: liquidinvestigations/nlp-service
-    tags: latest
-    auto_tag_suffix: base
+    tags: latest-base
+    #auto_tag_suffix: base
     dockerfile: Dockerfile.base
     username:
       from_secret: docker_username
