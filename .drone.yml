@@ -1,6 +1,9 @@
 kind: pipeline
 name: unittest
 
+concurrency:
+  limit: 1
+
 steps:
 - name: flake8
   image: alpine/flake8:3.7.7
@@ -22,6 +25,9 @@ steps:
 ---
 kind: pipeline
 name: publish
+
+concurrency:
+  limit: 1
 
 trigger:
   status:
@@ -86,21 +92,15 @@ name: integration-test
 depends_on:
 - publish
 
-services:
-- name: nlp-service
-  image: liquidinvestigations/nlp-service:${DRONE_COMMIT_BRANCH}
-  pull: always
+concurrency:
+  limit: 1
 
 steps:
-- name: integration-test
-  image: python:3.9.2-buster
+- name: run tests
+  image: liquidinvestigations/nlp-service:${DRONE_COMMIT_BRANCH}
+  pull: always
   commands:
-  - apt-get update -yqq
-  - pip install pytest pipenv
-  - pipenv install --system --deploy --ignore-pipfile
-  - pip install -e .
-  - cp config/default.conf config/app.conf
-  - pytest -v tests/integration_test.py --hostname http://nlp-service:5000/
+  - pytest -v tests/integration_test.py
 
 ---
 kind: secret
