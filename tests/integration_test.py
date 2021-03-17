@@ -1,8 +1,6 @@
 from urllib.parse import urljoin
 import requests
 
-NLP_URL = 'http://127.0.0.1:5000/'
-
 # test cases are tuples consisting of (text, language code, method used, number of found entities)
 test_cases = [
     ("""(A) “Skont l-Artikolu 4(2)(a) tal-Kodiċi ta' Kondotta, qiegħed niddikjara l-attività/ajiet professjonali
@@ -42,8 +40,8 @@ test_cases = [
         ]
 
 
-def call_nlp_server(endpoint, data_dict):
-    url = urljoin(NLP_URL, endpoint)
+def call_nlp_server(hostname, endpoint, data_dict):
+    url = urljoin(hostname, endpoint)
     resp = requests.post(url, json=data_dict)
     if (resp.status_code != 200
             or resp.headers['Content-Type'] != 'application/json'):
@@ -51,30 +49,30 @@ def call_nlp_server(endpoint, data_dict):
     return resp
 
 
-def get_language(text):
+def get_language(hostname, text):
     data = {'text': text}
-    resp = call_nlp_server('language_detection', data)
+    resp = call_nlp_server(hostname, 'language_detection', data)
     language = resp.json()['language']
     return language
 
 
-def get_entities_from_service(text, language=None):
+def get_entities_from_service(hostname, text, language=None):
     data = {'text': text}
     if language:
         data['language'] = language
-    resp = call_nlp_server('entity_extraction', data)
+    resp = call_nlp_server(hostname, 'entity_extraction', data)
     entity_list = resp.json()
     return entity_list
 
 
-def test_spacy_language():
+def test_spacy_language(hostname):
     for case in test_cases:
-        assert get_language(case[0][:2500]) == case[1]
+        assert get_language(hostname, case[0][:2500]) == case[1]
 
 
-def test_entity_extraction():
+def test_entity_extraction(hostname):
     for case in test_cases:
-        response = get_entities_from_service(case[0])
+        response = get_entities_from_service(hostname, case[0])
         assert response['language'] == case[1]
         assert response['method'] == case[2]
         assert len(response['entities']) == case[3]

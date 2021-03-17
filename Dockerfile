@@ -13,4 +13,4 @@ ADD config/default.conf ./config/app.conf
 ENV FLASK_APP app.py
 ENV FLASK_DEBUG 0
 
-CMD gunicorn -b 0.0.0.0:5001 --worker-connections 1000 app:app
+CMD gunicorn -b 0.0.0.0:5000 --worker-connections 1000 app:app
