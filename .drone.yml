@@ -44,7 +44,7 @@ steps:
 - name: build base docker image
   image: plugins/docker
   settings:
-    repo: liquidinvestigations/hoover-snoop2
+    repo: liquidinvestigations/nlp-service
     tags: latest
     auto_tag_suffix: base
     dockerfile: Dockerfile.base
