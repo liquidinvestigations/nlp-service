@@ -81,7 +81,6 @@ steps:
   - pipenv install --system --deploy --ignore-pipfile
   - polyglot download --dir /root/polyglot_data/  ner2.ro
   - polyglot download --dir /root/polyglot_data/beddings2.da embeddings2.ro
-  - pip install -e .
   - cp config/default.conf config/app.conf
   - py.test
 

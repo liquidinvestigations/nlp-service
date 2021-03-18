@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "52a260b736097407f003da3d2b53fdf6da2be5df48acff4ccf6854e760cc62e2"
+            "sha256": "7c0d96af6e55a88e807fe13983718907abe67c7c0455d46b5df2077a916b17cf"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -101,14 +101,6 @@
             ],
             "index": "pypi",
             "version": "==2.0.5"
-        },
-        "en-core-web-sm": {
-            "file": "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0/en_core_web_sm-3.0.0-py3-none-any.whl",
-            "hashes": [
-                "sha256:dfba97b3cb5c177f60c4087a5b4f5c9d7f5c0fce7150d8aa7c0aab4eb4811a07"
-            ],
-            "index": "pypi",
-            "version": "==3.0.0"
         },
         "flask": {
             "hashes": [
@@ -598,14 +590,6 @@
             ],
             "index": "pypi",
             "version": "==1.12.1"
-        },
-        "xx-ent-wiki-sm": {
-            "file": "https://github.com/explosion/spacy-models/releases/download/xx_ent_wiki_sm-3.0.0/xx_ent_wiki_sm-3.0.0-py3-none-any.whl",
-            "hashes": [
-                "sha256:892abf3cd8f2d0612eef79e95e79ccd624aab9ad6fd77fabe98174121cf7902e"
-            ],
-            "index": "pypi",
-            "version": "==3.0.0"
         }
     },
     "develop": {}
