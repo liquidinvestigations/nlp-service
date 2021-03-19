@@ -1,5 +1,5 @@
 import pytest
-import app
+from .. import app
 import json
 
 # test cases are tuples consisting of (text, language code, method used, number of found entities)
