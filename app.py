@@ -35,13 +35,15 @@ def get_entities():
         doc = nlp_en(text)
         method = 'spacy_english'
         ents = [{'text': ent.text, 'start': ent.start_char,
-                'end': ent.end_char, 'label': ent.label_}
+                'end': ent.end_char,
+                 'label': 'PER' if ent.label_ == 'PERSON' else ent.label_}
                 for ent in doc.ents]
     elif lan in supported_ner_spacy:
         method = 'spacy_multilingual'
         doc = nlp(text)
         ents = [{'text': ent.text, 'start': ent.start_char,
-                'end': ent.end_char, 'label': ent.label_}
+                'end': ent.end_char,
+                 'label': 'PER' if ent.label_ == 'PERSON' else ent.label_}
                 for ent in doc.ents]
     elif lan in supported_ner_polyglot:
         method = 'polyglot'
