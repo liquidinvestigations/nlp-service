@@ -3,3 +3,4 @@
 **/__pycache__
 /config/app.conf
 *.egg-info
+data/
