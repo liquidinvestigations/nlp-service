@@ -63,7 +63,7 @@ steps:
   - apt-get update -yqq
   - pip install flake8 pipenv > /dev/null
   - pipenv install --system --deploy --ignore-pipfile
-  - cp config/default.conf config/app.conf
+  - python download.py
   - py.test
 
 volumes:
