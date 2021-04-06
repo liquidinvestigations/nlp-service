@@ -17,24 +17,6 @@ steps:
   commands:
   - flake8
 
-- name: build base docker image
-  image: plugins/docker
-  settings:
-    repo: liquidinvestigations/nlp-service
-    tags: latest-base
-    #auto_tag_suffix: base
-    dockerfile: Dockerfile.base
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-  when:
-    event:
-    - push
-    - tag
-  #  branch:
-  #  - master
-
 - name: docker push branch ${DRONE_COMMIT_BRANCH}
   image: plugins/docker
   settings:
