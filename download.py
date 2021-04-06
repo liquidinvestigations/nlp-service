@@ -20,18 +20,18 @@ import spacy
 import argparse
 from polyglot.downloader import downloader
 
-allowed_poly_languages = ['en', 'de', 'ar', 'bg', 'ca', 'cs', 'da',  'el', 'et', 'fa',
+ALLOWED_POLY_LANGUAGES = ['en', 'de', 'ar', 'bg', 'ca', 'cs', 'da',  'el', 'et', 'fa',
                           'fi', 'he', 'hi', 'hr', 'hu', 'id', 'ja', 'ko', 'lt', 'lv',
                           'ms', 'no', 'ro', 'sk', 'sl', 'sr', 'sv', 'th', 'tl', 'tr',
                           'uk', 'vi', 'zh']
 
-allowed_spacy_models = ['zh_core_web', 'da_core_news', 'nl_core_news', 'en_core_web',
+ALLOWED_SPACY_MODELS = ['zh_core_web', 'da_core_news', 'nl_core_news', 'en_core_web',
                         'fr_core_news' 'de_core_news', 'el_core_news', 'it_core_news',
                         'ja_core_news', 'lt_core_news', 'xx_ent_wiki', 'nb_core_news',
                         'pl_core_news', 'pt_core_news', 'ro_core_news', 'ru_core_news',
                         'es_core_news'
                         ]
-allowed_spacy_model_types = ['sm', 'md', 'lg']
+ALLOWED_SPACY_MODEL_TYPES = ['sm', 'md', 'lg']
 
 
 download_dir = '/data'
@@ -42,7 +42,7 @@ spacy_download_path = 'https://github.com/explosion/spacy-models/releases'
 def download_models(donwloads):
     poly_downloads = []
     for language in donwloads['polyglot']:
-        assert language in allowed_poly_languages
+        assert language in ALLOWED_POLY_LANGUAGES
         if not os.path.isdir(f'{download_dir}/polyglot_data/embeddings2/{language}'):
             poly_downloads.append(f'embeddings2.{language}')
             poly_downloads.append(f'ner2.{language}')
@@ -55,8 +55,8 @@ def download_models(donwloads):
         if not spacy.util.is_package(model):
             logging.info(f'downloading spacy model {model}')
             model_name, type = model.rsplit('_', 1)
-            assert model_name in allowed_spacy_models
-            assert type in allowed_spacy_model_types
+            assert model_name in ALLOWED_SPACY_MODELS
+            assert type in ALLOWED_SPACY_MODEL_TYPES
             spacy.cli.download(model, False, False, '-t', '/data/spacy/', '--no-deps')
         else:
             logging.info(f'{model} is already installed')

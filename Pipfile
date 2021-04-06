@@ -6,53 +6,18 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-astroid = '*'
-attrs = '*'
-blis = '*'
-catalogue = '*'
-certifi = '*'
-chardet = '*'
-click = '*'
-cymem = '*'
 gunicorn = '*'
-idna = '*'
-iniconfig = '*'
-isort = '*'
-itsdangerous = '*'
-lazy-object-proxy = '*'
-mccabe = '*'
-murmurhash = '*'
-numpy = '*'
-pathy = '*'
-plac = '*'
-pluggy = '*'
 polyglot = '*'
-preshed = '*'
-py = '*'
-pycld2 = '*'
-pydantic = '*'
-pylint = '*'
-pyparsing = '*'
 pytest = '*'
-requests = '*'
-six = '*'
-smart-open = '*'
 spacy = '*'
-spacy-legacy = '*'
-srsly = '*'
-thinc = '*'
-toml = '*'
-tqdm = '*'
-typer = '*'
-urllib3 = '*'
-wasabi = '*'
-werkzeug = '*'
-wrapt = '*'
 Flask = '*'
-Jinja2 = '*'
-MarkupSafe = '*'
-Morfessor = '*'
-PyICU = '*'
+flake8 = "*"
+six = "*"
+pyicu = "*"
+morfessor = "*"
+pycld2 = "*"
+numpy = "*"
+
 
 [requires]
 python_version = '3.9'
