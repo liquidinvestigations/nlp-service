@@ -1,8 +1,8 @@
 import pytest
-from .. import app
+import app
 import json
 
-# test cases are tuples consisting of (text, language code, method used, number of found entities)
+# test cases are tuples consisting of (text, language code, model used, number of found entities)
 with open('tests/data/test_cases.json', 'r') as f:
     test_cases = json.loads(f.read())
 
@@ -10,26 +10,38 @@ with open('tests/data/test_cases.json', 'r') as f:
 @pytest.fixture
 def client():
     app.app.config['TESTING'] = True
-    return lambda endpoint, data: call_nlp_server(app.get_app().test_client(), endpoint, data)
+    return lambda endpoint, data, model='': call_nlp_server(app.get_app().test_client(),
+                                                            endpoint, data, model)
 
 
-def call_nlp_server(client, endpoint, text):
+def call_nlp_server(client, endpoint, text, model=''):
     data = {'text': text}
+    if model:
+        data['model'] = model
     resp = client.post(f'{endpoint}', json=data)
-    if (resp.status_code != 200
+    if (resp.status_code not in [200, 500]
             or resp.headers['Content-Type'] != 'application/json'):
         raise RuntimeError(f'Unexpected response from nlp service: {resp.data}')
     return resp.get_json()
 
 
 def test_spacy_language(client):
-    for case in test_cases:
+    for case in test_cases['no errors']:
         assert client("/language_detection", case['text'])["language"] == case['expected_language']
 
 
 def test_entity_extraction(client):
-    for case in test_cases:
-        response = client('/entity_extraction', case['text'])
+    for case in test_cases['no errors']:
+        model = case['used model'] if 'used model' in case else ''
+        response = client('/entity_extraction', case['text'], model)
+        print(response)
         assert response['language'] == case['expected_language']
-        assert response['method'] == case['expected_method']
+        assert response['model'] == case['expected_model']
         assert len(response['entities']) == case['expected_entities']
+
+
+def test_error_responses(client):
+    for case in test_cases['errors']:
+        model = case['used model'] if 'used model' in case else ''
+        response = client('/entity_extraction', case['text'], model)
+        assert response['error'] == case['expected_error']
