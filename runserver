@@ -1,0 +1,9 @@
+#!/bin/bash -ex
+
+#download all models in environment variable NLP_SERVICE_MODELS_JSON
+echo "downloading models"
+python download.py
+
+#run the server
+echo "starting server"
+gunicorn -b 0.0.0.0:5000 --worker-connections 1000 app:app
