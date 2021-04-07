@@ -1,8 +1,11 @@
 FROM python:3.9.1-buster
 
 WORKDIR /opt/app/
-ENV PYTHONPATH "${PYTHONPATH}:/data/spacy"
+ENV PYTHONPATH="${PYTHONPATH}:/data/spacy"
 ENV POLYGLOT_DATA_PATH=/data/
+ENV GUNICORN_WORKERS=2
+ENV GUNICORN_THREADS=30
+
 ADD Pipfile Pipfile.lock download.py  ./
 ADD runserver /
 RUN chmod +x /runserver

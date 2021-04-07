@@ -6,4 +6,4 @@ python download.py
 
 #run the server
 echo "starting server"
-gunicorn -b 0.0.0.0:5000 --worker-connections 1000 app:app
+gunicorn -b 0.0.0.0:5000 --keep-alive=120 --timeout=300 --worker-class=gthread app:app
