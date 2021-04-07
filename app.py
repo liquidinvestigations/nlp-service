@@ -20,7 +20,13 @@ if 'xx' in SPACY_LANGUAGES:
 
 
 def get_language(text):
-    """ Function for getting the language code using Polyglots language detector.
+    """ Gets the language code of text using Polyglots language detector.
+
+    Args:
+        text: string to process.
+
+    Returns:
+        Two character language code.
     """
     detector = Detector(text)
     language = detector.language
@@ -31,10 +37,19 @@ def get_language(text):
 
 
 def get_poly_ents(text, lan):
-    """Function for getting entities from Polyglot. In order to get the same
-    representation of entities in Polyglot as in spacy, the start and end index
-    relative to the actual text has to be calculated. Polyglot defines words and
-    uses word indices, while Spacy uses the char indices of the input string.
+    """Gets entities from text using polyglot.
+
+    In order to get the same representation of entities in Polyglot as in spacy,
+    the start and end indexrelative to the actual text has to be calculated.
+    Polyglot defines words and uses word indices, while Spacy uses the char
+    indices of the input string.
+
+    Args:
+        text: string to process
+        lan: language to use.
+
+    Returns:
+        list of extracted entities.
     """
     poly_text = Text(text, hint_language_code=lan)
     ents = []
@@ -46,8 +61,8 @@ def get_poly_ents(text, lan):
         for match in re.finditer(entity[0], text):
             # the match is only a match if it's not inside another match.
             # Therefore, the entities are ordered by length beforehand.
-            if all(not(span[0] <= match.start() <= span[1])
-                    and not(span[0] <= match.end() <= span[1]) for span in spans):
+            if all(not(span[0] <= match.start() <= span[1]) and not
+                    (span[0] <= match.end() <= span[1]) for span in spans):
                 spans.append((match.start(), match.end()))
                 ents.append({'text': entity[0], 'start': match.start(),
                             'end': match.end(), 'type': entity[1]})
@@ -55,9 +70,17 @@ def get_poly_ents(text, lan):
 
 
 def get_spacy_ents(text, nlp):
-    """Processes an input text with a spacy model and returns a list of
-    entities.
+    """Gets entities from text using spacy.
+
+
     The label for PERSON is changed in order to be in accordance with polyglot.
+
+    Args:
+        text: string to process.
+        nlp: spacy model to use.
+
+    Returns:
+        List of extracted entities.
     """
     doc = nlp(text)
     ents = [{'text': ent.text, 'start': ent.start_char,
@@ -69,8 +92,13 @@ def get_spacy_ents(text, nlp):
 
 def get_spacy_model(lan):
     """Helper function for getting the most appropriate spacy model.
+
     It assumes that the largest available model should be loaded and
     the multilingual model only if no other model is available.
+
+    Args:
+        lan: language code
+
     """
     language_models = [model for model in DOWNLOADED_MODELS['spacy'] if model.startswith(lan)]
     if not language_models:
@@ -86,9 +114,15 @@ def get_spacy_model(lan):
 
 def get_ents_from_model(text, lan, model):
     """Fuction for checking what to do with a requested model.
+
     For both, polyglot and spacy model first it is checked whether
     they are downloaded. If not, the server with respond with a 500 error.
     If they are downloaded, get the ents and return.
+
+    Args:
+        text: string to process
+        lan: language code
+        model: model string from request
     """
     if model.startswith('poly'):
         lan = model.split('_')[1]
@@ -110,17 +144,24 @@ def get_ents_from_model(text, lan, model):
 @app.route('/entity_extraction', methods=['POST'])
 def get_entities():
     """Entity extraction endpoint.
+
+
     It checks whether it has received a text data and whether a language or an
     actual model was specified by the request. If not, the language is
     determined and the most appropriate model which is installed is used in
     order to extract entities. Spacy models have prioriy over polyglot models.
-    larger spacy models have priority over smalles ones for the same language.
+    Larger spacy models have priority over smalles ones for the same language.
     Spacy's specific language models have priority over the multilingual model.
     A model can also be specified during the request. Either, a spacy model name
     has to be provided, or NER via polyglot with a language by adding
     - "model": "poly_{language_code}" to the request.
     It is first checked, whether the model is installed, if not, the server
     will respond with a 500 error.
+
+    Returns:
+        Response with JSON. Either a 500 Error and a Reason, or a 200 Code and
+        the extracted entities, as well as information about language and which
+        model was used.
     """
     if not request.json or 'text' not in request.json:
         abort(400)
@@ -131,24 +172,24 @@ def get_entities():
         lan = get_language(text[:2500])
     if 'model' in request.json:
         model = request.json['model']
-        response = get_ents_from_model(text, lan, model)
+        return get_ents_from_model(text, lan, model)
     elif lan in SPACY_LANGUAGES:
         model, nlp = get_spacy_model(lan)
         ents = get_spacy_ents(text, nlp)
-        response = jsonify({'language': lan, 'model': model, 'entities': ents}), 200
+        return jsonify({'language': lan, 'model': model, 'entities': ents}), 200
     elif lan in DOWNLOADED_MODELS['polyglot']:
         model = 'polyglot'
         ents = get_poly_ents(text, lan)
-        response = jsonify({'language': lan, 'model': model, 'entities': ents}), 200
+        return jsonify({'language': lan, 'model': model, 'entities': ents}), 200
     else:
-        response = jsonify({'error': f'no model for text in language {lan}'}), 500
-    return response
+        return jsonify({'error': f'no model for text in language {lan}'}), 500
 
 
 @app.route('/language_detection', methods=['POST'])
 def return_language():
-    """ Language Detection endpoint. Gets the language based on the text and
-    returns it in a response.
+    """Gets the language based on the text andreturns it in a response.
+
+    Returns: json response with either the language (200) or error (500)
     """
     if not request.json or 'text' not in request.json:
         abort(400)
@@ -159,8 +200,22 @@ def return_language():
         return jsonify({'error': 'could not determine language for text'}, 500)
 
 
+@app.route('/config', methods=['GET'])
+def return_config():
+    """Gets the config variable `NLP_SERVICE_MODELS_JSON`
+
+    Returns:
+        The content of `NLP_SERVICE_MODELS_JSON` in a flask response.
+    """
+    return DOWNLOADED_MODELS, 200
+
+
 def get_app():
-    "returns the app for testing"
+    """returns the app for testing.
+
+    Returns:
+        the app, for testing.
+    """
     return app
 
 

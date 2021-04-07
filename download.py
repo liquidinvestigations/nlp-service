@@ -20,7 +20,8 @@ import spacy
 import argparse
 from polyglot.downloader import downloader
 
-ALLOWED_POLY_LANGUAGES = ['en', 'de', 'ar', 'bg', 'ca', 'cs', 'da',  'el', 'et', 'fa',
+
+ALLOWED_POLY_LANGUAGES = ['en', 'de', 'ar', 'bg', 'ca', 'cs', 'da', 'el', 'et', 'fa',
                           'fi', 'he', 'hi', 'hr', 'hu', 'id', 'ja', 'ko', 'lt', 'lv',
                           'ms', 'no', 'ro', 'sk', 'sl', 'sr', 'sv', 'th', 'tl', 'tr',
                           'uk', 'vi', 'zh']
@@ -40,6 +41,11 @@ spacy_download_path = 'https://github.com/explosion/spacy-models/releases'
 
 
 def download_models(donwloads):
+    """Downloads the models specified in NLP_SERVICE_MODELS_JSON
+
+    Args:
+        downloads: dictionary containing all models to download
+    """
     poly_downloads = []
     for language in donwloads['polyglot']:
         assert language in ALLOWED_POLY_LANGUAGES
@@ -49,7 +55,7 @@ def download_models(donwloads):
         else:
             logging.info(f'skipping {language}, already installed')
     if poly_downloads:
-        downloader.download(poly_downloads,  download_dir=f'{download_dir}/polyglot_data')
+        downloader.download(poly_downloads, download_dir=f'{download_dir}/polyglot_data')
 
     for model in donwloads['spacy']:
         if not spacy.util.is_package(model):
