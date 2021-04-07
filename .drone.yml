@@ -1,5 +1,18 @@
 kind: pipeline
+name: static-tests
+
+steps:
+- name: flake8
+  image: alpine/flake8:3.7.7
+  commands:
+  - flake8
+
+---
+kind: pipeline
 name: publish
+
+depends_on:
+- static-tests
 
 concurrency:
   limit: 1
@@ -11,12 +24,8 @@ trigger:
   - push
   - tag
 
-steps:
-- name: flake8
-  image: alpine/flake8:3.7.7
-  commands:
-  - flake8
 
+steps:
 - name: docker push branch ${DRONE_COMMIT_BRANCH}
   image: plugins/docker
   settings:
@@ -55,16 +64,22 @@ concurrency:
 
 steps:
 - name: run tests
-  image: liquidinvestigations/nlp-service:${DRONE_COMMIT_BRANCH}
+  image: python:3.9-buster
   pull: always
   environment:
     NLP_SERVICE_MODELS_JSON: '{"spacy":["xx_ent_wiki_sm", "en_core_web_sm"],"polyglot":["en", "de", "ro"]}'
+    PYTHONPATH: '${PYTHONPATH}:/data/spacy'
+    POLYGLOT_DATA_PATH: '/data/'
+
   commands:
   - apt-get update -yqq
   - pip install flake8 pipenv > /dev/null
   - pipenv install --system --deploy --ignore-pipfile
   - python download.py
   - py.test
+  volumes:
+  - name: test-models
+    path: /data
 
 volumes:
 - name: test-models
