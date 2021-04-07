@@ -1,7 +1,7 @@
 # NLP-Service for entity extraction using spacy or Polyglot depending on the language
 
-The Service uses [spacy][spacy] as well as
-[polyglot][polyglot]. The models need to be downloaded.
+The Service uses [spacy] as well as
+[polyglot]. The models need to be downloaded.
 Models are downloaded into the `/data` folder inside the container. Map it
 outside if you want to acess the downloaded models.
 

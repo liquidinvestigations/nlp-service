@@ -15,12 +15,14 @@ def client():
 
 
 def call_nlp_server(client, endpoint, text, model=''):
-    data = {'text': text}
-    if model:
-        data['model'] = model
-    resp = client.post(f'{endpoint}', json=data)
-    if (resp.status_code not in [200, 500]
-            or resp.headers['Content-Type'] != 'application/json'):
+    if endpoint == "/config":
+        resp = client.get(f'{endpoint}')
+    else:
+        data = {'text': text}
+        if model:
+            data['model'] = model
+        resp = client.post(f'{endpoint}', json=data)
+    if (resp.status_code not in [200, 500] or resp.headers['Content-Type'] != 'application/json'):
         raise RuntimeError(f'Unexpected response from nlp service: {resp.data}')
     return resp.get_json()
 
@@ -45,3 +47,10 @@ def test_error_responses(client):
         model = case['used model'] if 'used model' in case else ''
         response = client('/entity_extraction', case['text'], model)
         assert response['error'] == case['expected_error']
+
+
+def test_config_endpoint(client):
+    test_conf = {"spacy": ["xx_ent_wiki_sm", "en_core_web_sm"],
+                 "polyglot": ["en", "de", "ro"]
+                 }
+    assert client("/config", None) == test_conf
