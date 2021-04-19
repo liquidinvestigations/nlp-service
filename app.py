@@ -8,6 +8,8 @@ from flask import Flask, request, jsonify, abort
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
+app.config['SPACY_MULTILINGUAL_LAN_CODE'] = 'xx'
+app.config['SPACY_MULILINGUAL_LANGUAGES'] = ['nl', 'en', 'fr', 'de', 'it', 'pl', 'pt', 'ru', 'es']
 
 DOWNLOADED_MODELS = json.loads(os.getenv('NLP_SERVICE_MODELS_JSON'))
 # check for loaded spacy languages and store their language code
@@ -15,8 +17,8 @@ if 'spacy' in DOWNLOADED_MODELS:
     SPACY_LANGUAGES = set([model.split('_')[0] for model in DOWNLOADED_MODELS['spacy']])
 else:
     SPACY_LANGUAGES = set()
-if 'xx' in SPACY_LANGUAGES:
-    SPACY_LANGUAGES.update(['nl', 'en', 'fr', 'de', 'it', 'pl', 'pt', 'ru', 'es'])
+if app.config['SPACY_MULTILINGUAL_LAN_CODE'] in SPACY_LANGUAGES:
+    SPACY_LANGUAGES.update(app.config['SPACY_MULILINGUAL_LANGUAGES'])
 
 
 def get_language(text):
@@ -72,7 +74,6 @@ def get_poly_ents(text, lan):
 def get_spacy_ents(text, nlp):
     """Gets entities from text using spacy.
 
-
     The label for PERSON is changed in order to be in accordance with polyglot.
 
     Args:
@@ -126,25 +127,22 @@ def get_ents_from_model(text, lan, model):
     """
     if model.startswith('poly'):
         lan = model.split('_')[1]
-        if 'polyglot' in DOWNLOADED_MODELS and lan in DOWNLOADED_MODELS['polyglot']:
-            model = 'polyglot'
-            ents = get_poly_ents(text, lan)
-            return jsonify({'language': lan, 'model': model, 'entities': ents}), 200
-        else:
+        if not ('polyglot' in DOWNLOADED_MODELS and lan in DOWNLOADED_MODELS['polyglot']):
             return jsonify({'error': f'no polyglot model for language {lan}'}), 500
+        model = 'polyglot'
+        ents = get_poly_ents(text, lan)
+        return jsonify({'language': lan, 'model': model, 'entities': ents}), 200
     else:
-        if 'spacy' in DOWNLOADED_MODELS and model in DOWNLOADED_MODELS['spacy']:
-            nlp = spacy.load(model)
-            ents = get_spacy_ents(text, nlp)
-            return jsonify({'language': lan, 'model': model, 'entities': ents}), 200
-        else:
+        if not ('spacy' in DOWNLOADED_MODELS and model in DOWNLOADED_MODELS['spacy']):
             return jsonify({'error': f'no spacy model with name {model}'}), 500
+        nlp = spacy.load(model)
+        ents = get_spacy_ents(text, nlp)
+        return jsonify({'language': lan, 'model': model, 'entities': ents}), 200
 
 
 @app.route('/entity_extraction', methods=['POST'])
 def get_entities():
     """Entity extraction endpoint.
-
 
     It checks whether it has received a text data and whether a language or an
     actual model was specified by the request. If not, the language is

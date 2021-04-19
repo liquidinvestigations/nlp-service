@@ -73,7 +73,7 @@ steps:
 
   commands:
   - apt-get update -yqq
-  - pip install flake8 pipenv > /dev/null
+  - pip install pipenv > /dev/null
   - pipenv install --system --deploy --ignore-pipfile
   - python download.py
   - py.test

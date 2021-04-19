@@ -1,5 +1,6 @@
-""" Downloader for language models used for Named Entity Recognition. The models
-which should be downloaded must be stored in an environment variable
+""" Downloader for language models used for Named Entity Recognition.
+
+The models which should be downloaded must be stored in an environment variable
 NLP_SERVICE_MODELS_JSON. The environment variable NLP_SERVICE_MODELS_JSON is a
 json formatted string containing all models to be downloaded in two keys 'spacy'
 and 'polyglot', followed by a list of model names for spacy (since there are
@@ -14,6 +15,7 @@ an exception.
 
 import os
 import shutil
+import time
 import logging
 import json
 import spacy
@@ -27,7 +29,7 @@ ALLOWED_POLY_LANGUAGES = ['en', 'de', 'ar', 'bg', 'ca', 'cs', 'da', 'el', 'et', 
                           'uk', 'vi', 'zh']
 
 ALLOWED_SPACY_MODELS = ['zh_core_web', 'da_core_news', 'nl_core_news', 'en_core_web',
-                        'fr_core_news' 'de_core_news', 'el_core_news', 'it_core_news',
+                        'fr_core_news', 'de_core_news', 'el_core_news', 'it_core_news',
                         'ja_core_news', 'lt_core_news', 'xx_ent_wiki', 'nb_core_news',
                         'pl_core_news', 'pt_core_news', 'ro_core_news', 'ru_core_news',
                         'es_core_news'
@@ -40,46 +42,52 @@ download_dir = '/data'
 spacy_download_path = 'https://github.com/explosion/spacy-models/releases'
 
 
-def download_models(donwloads):
+def download_models(downloads):
     """Downloads the models specified in NLP_SERVICE_MODELS_JSON
 
     Args:
         downloads: dictionary containing all models to download
     """
     poly_downloads = []
-    for language in donwloads['polyglot']:
-        assert language in ALLOWED_POLY_LANGUAGES
-        if not os.path.isdir(f'{download_dir}/polyglot_data/embeddings2/{language}'):
-            poly_downloads.append(f'embeddings2.{language}')
-            poly_downloads.append(f'ner2.{language}')
-        else:
-            logging.info(f'skipping {language}, already installed')
-    if poly_downloads:
-        downloader.download(poly_downloads, download_dir=f'{download_dir}/polyglot_data')
+    if 'polyglot' in downloads:
+        for language in downloads['polyglot']:
+            assert language in ALLOWED_POLY_LANGUAGES
+            if not os.path.isdir(f'{download_dir}/polyglot_data/embeddings2/{language}'):
+                poly_downloads.append(f'embeddings2.{language}')
+                poly_downloads.append(f'ner2.{language}')
+            else:
+                logging.info(f'skipping {language}, already installed')
+        if poly_downloads:
+            downloader.download(poly_downloads, download_dir=f'{download_dir}/polyglot_data')
 
-    for model in donwloads['spacy']:
-        if not spacy.util.is_package(model):
-            logging.info(f'downloading spacy model {model}')
-            model_name, type = model.rsplit('_', 1)
-            assert model_name in ALLOWED_SPACY_MODELS
-            assert type in ALLOWED_SPACY_MODEL_TYPES
-            spacy.cli.download(model, False, False, '-t', '/data/spacy/', '--no-deps')
-        else:
-            logging.info(f'{model} is already installed')
+    if 'spacy' in downloads:
+        for model in downloads['spacy']:
+            if not spacy.util.is_package(model):
+                logging.info(f'downloading spacy model {model}')
+                model_name, type = model.rsplit('_', 1)
+                assert model_name in ALLOWED_SPACY_MODELS
+                assert type in ALLOWED_SPACY_MODEL_TYPES
+                spacy.cli.download(model, False, False, '-t', '/data/spacy/', '--no-deps')
+            else:
+                logging.info(f'{model} is already installed')
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-u', '--update', action='store_true')
     args = parser.parse_args()
+    logging.getLogger().setLevel(logging.INFO)
     if args.update:
         logging.warn('downloading all models anew.')
         shutil.rmtree(download_dir)
         os.mkdir(download_dir)
     logging.info('downloading models from environment variable.')
-    donwloads = json.loads(os.getenv('NLP_SERVICE_MODELS_JSON'))
-    if donwloads:
-        download_models(donwloads)
+    downloads = json.loads(os.getenv('NLP_SERVICE_MODELS_JSON'))
+    if downloads:
+        t0 = time.time()
+        download_models(downloads)
+        dt = round(time.time() - t0, 2)
+        logging.info(f"All models downloaded after {dt}s")
     else:
         logging.error('Environment variable NLP_SERVICE_MODELS_JSON is not defined')
         exit(1)
