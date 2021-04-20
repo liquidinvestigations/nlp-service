@@ -11,12 +11,12 @@ An example of running the docker container may look like this:
 
 ```bash
 docker run \
-  -e  NLP_SERVICE_MODELS_JSON="$(cat ./config/models.json)" \
+  -e  NLP_SERVICE_MODELS_JSON="$(cat ./presets/test_models.json)" \
   -v data:/data \
   -p 5000:5000 \
   liquidinvestigations/nlp-service
 ```
-You can check out `/config/models.json` to see which models are downloaded in
+You can check out `/presets/test_models.json` to see which models are downloaded in
 this example.
 
 
@@ -58,14 +58,14 @@ The Container automatically tries to download all models which are stored in the
 environment variable `NLP_SERVICE_MODELS_JSON`, which has to contain
 JSON-formatted text with two keys, `"spacy"` and `polyglot`. Both keys need to
 contain a list of models for spacy and language codes for polyglot. Examples can
-be found in the `config` directory, where presets for the environment variable
+be found in the `presets` directory, where presets for the environment variable
 are stored. A list of available spacy models can be found
 [here][spacy models]. A list of all languages for which polyglot supports NER
 can be found [here][polyglot models].
 
 ## Presets
 
-The `config` directory contains some presets for downloading models in order to
+The `presets` directory contains some presets for downloading models in order to
 make configuration easier. You can tell the service to download the models from
 a preset by
 settings the environment variable `NLP_SERVICE_PRESET` to one of the available
