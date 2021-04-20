@@ -18,7 +18,7 @@ WORKDIR /opt/app/
 EXPOSE 5000
 ADD app.py .
 ADD tests ./tests
-ADD presets /presets
+ADD presets ./presets
 ENV FLASK_APP app.py
 ENV FLASK_DEBUG 0
 
