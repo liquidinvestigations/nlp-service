@@ -60,7 +60,7 @@ def get_poly_ents(text, lan):
                             for entity in poly_text.entities]))
     entity_text.sort(key=len, reverse=True)
     for entity in entity_text:
-        for match in re.finditer(entity[0], text):
+        for match in re.finditer(re.escape(entity[0]), text):
             # the match is only a match if it's not inside another match.
             # Therefore, the entities are ordered by length beforehand.
             if all(not(span[0] <= match.start() <= span[1]) and not
@@ -100,6 +100,9 @@ def get_spacy_model(lan):
     Args:
         lan: language code
 
+    Returns:
+        Model: Name of the model
+        nlp: The loaded Spacy Model
     """
     language_models = [model for model in DOWNLOADED_MODELS['spacy'] if model.startswith(lan)]
     if not language_models:
@@ -124,6 +127,9 @@ def get_ents_from_model(text, lan, model):
         text: string to process
         lan: language code
         model: model string from request
+
+    Returns:
+        JSON-Response and Status code that the service will send as response.
     """
     if model.startswith('poly'):
         lan = model.split('_')[1]
