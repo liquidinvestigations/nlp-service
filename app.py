@@ -106,9 +106,9 @@ def get_spacy_model(lan):
     """
     language_models = [model for model in DOWNLOADED_MODELS['spacy'] if model.startswith(lan)]
     if not language_models:
-        method = 'xx_ent_wiki_sm'
-        nlp = spacy.load(method)
-        return method, nlp
+        model = 'xx_ent_wiki_sm'
+        nlp = spacy.load(model)
+        return model, nlp
     for size in ['lg', 'md', 'sm']:
         for model in language_models:
             if model.endswith(size):
@@ -182,7 +182,7 @@ def get_entities():
         ents = get_spacy_ents(text, nlp)
         return jsonify({'language': lan, 'model': model, 'entities': ents}), 200
     elif lan in DOWNLOADED_MODELS['polyglot']:
-        model = 'polyglot'
+        model = f'polyglot_{lan}'
         ents = get_poly_ents(text, lan)
         return jsonify({'language': lan, 'model': model, 'entities': ents}), 200
     else:
