@@ -86,7 +86,7 @@ def get_spacy_ents(text, nlp):
     doc = nlp(text)
     ents = [{'text': ent.text, 'start': ent.start_char,
             'end': ent.end_char,
-             'label': 'PER' if ent.label_ == 'PERSON' else ent.label_}
+             'type': 'PER' if ent.label_ == 'PERSON' else ent.label_}
             for ent in doc.ents]
     return ents
 
