@@ -131,11 +131,10 @@ def get_ents_from_model(text, lan, model):
     Returns:
         JSON-Response and Status code that the service will send as response.
     """
-    if model.startswith('poly'):
+    if model.startswith('polyglot'):
         lan = model.split('_')[1]
         if not ('polyglot' in DOWNLOADED_MODELS and lan in DOWNLOADED_MODELS['polyglot']):
             return jsonify({'error': f'no polyglot model for language {lan}'}), 500
-        model = 'polyglot'
         ents = get_poly_ents(text, lan)
         return jsonify({'language': lan, 'model': model, 'entities': ents}), 200
     else:
@@ -158,7 +157,7 @@ def get_entities():
     Spacy's specific language models have priority over the multilingual model.
     A model can also be specified during the request. Either, a spacy model name
     has to be provided, or NER via polyglot with a language by adding
-    - "model": "poly_{language_code}" to the request.
+    - "model": "polyglot_{language_code}" to the request.
     It is first checked, whether the model is installed, if not, the server
     will respond with a 500 error.
 
