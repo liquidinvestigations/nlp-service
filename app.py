@@ -12,6 +12,9 @@ app.config['SPACY_MULTILINGUAL_LAN_CODE'] = 'xx'
 app.config['SPACY_MULILINGUAL_LANGUAGES'] = ['nl', 'en', 'fr', 'de', 'it', 'pl', 'pt', 'ru', 'es']
 
 DOWNLOADED_MODELS = json.loads(os.getenv('NLP_SERVICE_MODELS_JSON'))
+
+app.config['FALLBACK_LANGUAGE'] = json.loads(os.getenv('NLP_SERVICE_FALLBACK_LANGUAGE'))
+
 # check for loaded spacy languages and store their language code
 if 'spacy' in DOWNLOADED_MODELS:
     SPACY_LANGUAGES = set([model.split('_')[0] for model in DOWNLOADED_MODELS['spacy']])
@@ -24,6 +27,10 @@ if app.config['SPACY_MULTILINGUAL_LAN_CODE'] in SPACY_LANGUAGES:
 def get_language(text):
     """ Gets the language code of text using Polyglots language detector.
 
+    If the Environment variable NLP_SERVICE_FALLBACK_LANGUAGE is set, it
+    will be returned if no language was detectable, instead of returning no
+    language.
+
     Args:
         text: string to process.
 
@@ -34,6 +41,8 @@ def get_language(text):
     language = detector.language
     if language.code and language.code != 'un' and detector.reliable:
         return detector.language.code
+    elif app.config['FALLBACK_LANGUAGE']:
+        return app.config['FALLBACK_LANGUAGE']
     else:
         return None
 
