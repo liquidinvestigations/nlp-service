@@ -4,6 +4,7 @@ import spacy
 import re
 from polyglot.text import Text
 from polyglot.detect import Detector
+from polyglot.detect.base import UnknownLanguage
 from flask import Flask, request, jsonify, abort
 
 app = Flask(__name__)
@@ -37,7 +38,10 @@ def get_language(text):
     Returns:
         Two character language code.
     """
-    detector = Detector(text)
+    try:
+        detector = Detector(text)
+    except UnknownLanguage:
+        return app.config['FALLBACK_LANGUAGE']
     language = detector.language
     if language.code and language.code != 'un' and detector.reliable:
         return detector.language.code
