@@ -13,7 +13,7 @@ app.config['SPACY_MULILINGUAL_LANGUAGES'] = ['nl', 'en', 'fr', 'de', 'it', 'pl',
 
 DOWNLOADED_MODELS = json.loads(os.getenv('NLP_SERVICE_MODELS_JSON'))
 
-app.config['FALLBACK_LANGUAGE'] = json.loads(os.getenv('NLP_SERVICE_FALLBACK_LANGUAGE'))
+app.config['FALLBACK_LANGUAGE'] = os.getenv('NLP_SERVICE_FALLBACK_LANGUAGE')
 
 # check for loaded spacy languages and store their language code
 if 'spacy' in DOWNLOADED_MODELS:
