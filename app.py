@@ -12,6 +12,8 @@ app.config['JSON_SORT_KEYS'] = False
 app.config['SPACY_MULTILINGUAL_LAN_CODE'] = 'xx'
 app.config['SPACY_MULILINGUAL_LANGUAGES'] = ['nl', 'en', 'fr', 'de', 'it', 'pl', 'pt', 'ru', 'es']
 
+SPACY_TEXT_LIMIT = 1000000
+
 DOWNLOADED_MODELS = json.loads(os.getenv('NLP_SERVICE_MODELS_JSON'))
 
 app.config['FALLBACK_LANGUAGE'] = os.getenv('NLP_SERVICE_FALLBACK_LANGUAGE')
@@ -88,6 +90,8 @@ def get_spacy_ents(text, nlp):
     """Gets entities from text using spacy.
 
     The label for PERSON is changed in order to be in accordance with polyglot.
+    Spacy doesn't like text over 1000000 chars so the service handles such longs
+    text in more batches.
 
     Args:
         text: string to process.
@@ -96,6 +100,11 @@ def get_spacy_ents(text, nlp):
     Returns:
         List of extracted entities.
     """
+    if (len(text) > SPACY_TEXT_LIMIT):
+        ents = []
+        for i in range(0, len(text), SPACY_TEXT_LIMIT):
+            ents += get_spacy_ents(text[i:i + SPACY_TEXT_LIMIT], nlp)
+        return ents
     doc = nlp(text)
     ents = [{'text': ent.text, 'start': ent.start_char,
             'end': ent.end_char,
