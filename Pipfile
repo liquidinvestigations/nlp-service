@@ -1,0 +1,23 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+gunicorn = '*'
+polyglot = '*'
+pytest = '*'
+spacy = '*'
+Flask = '*'
+flake8 = "*"
+six = "*"
+pyicu = "*"
+morfessor = "*"
+pycld2 = "*"
+numpy = "*"
+
+
+[requires]
+python_version = '3.9'

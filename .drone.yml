@@ -1,0 +1,100 @@
+kind: pipeline
+name: static-tests
+
+steps:
+- name: flake8
+  image: alpine/flake8:3.7.7
+  commands:
+  - flake8
+
+---
+kind: pipeline
+name: publish
+
+depends_on:
+- static-tests
+
+concurrency:
+  limit: 1
+
+trigger:
+  status:
+  - success
+  event:
+  - push
+  - tag
+
+
+steps:
+- name: docker push branch ${DRONE_COMMIT_BRANCH}
+  image: plugins/docker
+  settings:
+    repo: liquidinvestigations/nlp-service
+    tags: ${DRONE_COMMIT_BRANCH}
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+  when:
+    event:
+    - push
+    branch:
+      exclude:
+      - dependabot/**
+
+- name: docker push autotag + latest
+  image: plugins/docker
+  settings:
+    repo: liquidinvestigations/nlp-service
+    auto_tag: true
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+
+---
+kind: pipeline
+name: integration-test
+
+depends_on:
+- publish
+
+concurrency:
+  limit: 1
+
+steps:
+- name: run tests
+  image: python:3.9-buster
+  pull: always
+  environment:
+    NLP_SERVICE_MODELS_JSON: '{"spacy":["xx_ent_wiki_sm", "en_core_web_sm"],"polyglot":["en", "de", "ro"]}'
+    PYTHONPATH: '${PYTHONPATH}:/data/spacy'
+    POLYGLOT_DATA_PATH: '/data/'
+
+  commands:
+  - apt-get update -yqq
+  - pip install pipenv > /dev/null
+  - pipenv install --system --deploy --ignore-pipfile
+  - python download.py
+  - py.test
+  volumes:
+  - name: test-models
+    path: /data
+
+volumes:
+- name: test-models
+  temp: {}
+
+---
+kind: secret
+name: docker_username
+get:
+  path: liquid/ci/drone.docker
+  name: username
+
+---
+kind: secret
+name: docker_password
+get:
+  path: liquid/ci/drone.docker
+  name: password

@@ -1,0 +1,13 @@
+#!/bin/bash -ex
+
+if [ -n "$NLP_SERVICE_PRESET" ]; then
+  echo "Loading preset $NLP_SERVICE_PRESET"
+  export NLP_SERVICE_MODELS_JSON="$(cat ./presets/$NLP_SERVICE_PRESET.json)"
+fi
+#download all models in environment variable NLP_SERVICE_MODELS_JSON
+echo "downloading models"
+python download.py
+
+#run the server
+echo "starting server"
+gunicorn -b 0.0.0.0:5000 --keep-alive=120 --timeout=300 --worker-class=gthread app:app
