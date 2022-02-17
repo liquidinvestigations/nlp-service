@@ -1,5 +1,7 @@
 #!/bin/bash -ex
 
+cd "$(dirname ${BASH_SOURCE[0]})"
+
 if [ -n "$NLP_SERVICE_PRESET" ]; then
   echo "Loading preset $NLP_SERVICE_PRESET"
   export NLP_SERVICE_MODELS_JSON="$(cat ./presets/$NLP_SERVICE_PRESET.json)"

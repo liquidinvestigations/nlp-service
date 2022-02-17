@@ -1,27 +1,34 @@
 FROM python:3.9.1-buster
 
+RUN mkdir /opt/app/
 WORKDIR /opt/app/
+
 ENV PYTHONPATH="${PYTHONPATH}:/data/spacy"
 ENV POLYGLOT_DATA_PATH=/data/
 ENV GUNICORN_WORKERS=2
 ENV GUNICORN_THREADS=30
 
-ADD Pipfile Pipfile.lock download.py ./
+ADD Pipfile Pipfile.lock  ./
 
-ADD runserver /
-ADD download /
-RUN chmod +x /runserver
-RUN chmod +x /download
 RUN pip install pipenv
 RUN pipenv install --system --deploy --ignore-pipfile
 RUN mkdir /data/
 
-WORKDIR /opt/app/
-EXPOSE 5000
+
+ADD download.py .
 ADD app.py .
+ADD __init__.py .
+
+ADD runserver .
+ADD download .
+RUN chmod +x ./runserver
+RUN chmod +x ./download
+
 ADD tests ./tests
 ADD presets ./presets
+
 ENV FLASK_APP app.py
 ENV FLASK_DEBUG 0
 
-CMD /runserver
+EXPOSE 5000
+CMD /opt/app/runserver
