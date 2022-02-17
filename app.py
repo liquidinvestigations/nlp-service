@@ -1,3 +1,4 @@
+import logging
 import os
 import json
 import spacy
@@ -6,6 +7,8 @@ from polyglot.text import Text
 from polyglot.detect import Detector
 from polyglot.detect.base import UnknownLanguage
 from flask import Flask, request, jsonify, abort
+
+log = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
@@ -189,24 +192,31 @@ def get_entities():
         model was used.
     """
     if not request.json or 'text' not in request.json:
+        log.warning('POST /entity_extraction 400')
         abort(400)
+
     text = request.json['text']
     if 'lan' in request.json:
         lan = request.json['lan']
     else:
         lan = get_language(text[:2500])
+
     if 'model' in request.json:
         model = request.json['model']
+        log.warning('POST /entity_extraction ???')
         return get_ents_from_model(text, lan, model)
     elif lan in SPACY_LANGUAGES:
         model, nlp = get_spacy_model(lan)
         ents = get_spacy_ents(text, nlp)
+        log.info('POST /entity_extraction 200')
         return jsonify({'language': lan, 'model': model, 'entities': ents}), 200
     elif lan in DOWNLOADED_MODELS['polyglot']:
         model = f'polyglot_{lan}'
         ents = get_poly_ents(text, lan)
+        log.info('POST /entity_extraction 200')
         return jsonify({'language': lan, 'model': model, 'entities': ents}), 200
     else:
+        log.warning('POST /entity_extraction 500')
         return jsonify({'error': f'no model for text in language {lan}'}), 500
 
 
@@ -217,11 +227,15 @@ def return_language():
     Returns: json response with either the language (200) or error (500)
     """
     if not request.json or 'text' not in request.json:
+        log.warning('POST /language_detection 400')
         abort(400)
+
     language = get_language(request.json['text'])
     if language:
+        log.info('POST /language_detection 200')
         return jsonify({'language': language}), 200
     else:
+        log.warning('POST /language_detection 500')
         return jsonify({'error': 'could not determine language for text'}, 500)
 
 
@@ -232,6 +246,7 @@ def return_config():
     Returns:
         The content of `NLP_SERVICE_MODELS_JSON` in a flask response.
     """
+    log.info('GET /config 200')
     return DOWNLOADED_MODELS, 200
 
 
