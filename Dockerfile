@@ -9,7 +9,9 @@ ENV GUNICORN_THREADS=30
 ADD Pipfile Pipfile.lock download.py ./
 
 ADD runserver /
+ADD download /
 RUN chmod +x /runserver
+RUN chmod +x /download
 RUN pip install pipenv
 RUN pipenv install --system --deploy --ignore-pipfile
 RUN mkdir /data/
