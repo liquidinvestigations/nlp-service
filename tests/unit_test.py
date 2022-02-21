@@ -15,7 +15,7 @@ def client():
 
 
 def call_nlp_server(client, endpoint, text, model=''):
-    if endpoint == "/config":
+    if endpoint in ["/config", '/health']:
         resp = client.get(f'{endpoint}')
     else:
         data = {'text': text}
@@ -54,3 +54,7 @@ def test_config_endpoint(client):
                  "polyglot": ["en", "de", "ro"]
                  }
     assert client("/config", None) == test_conf
+
+
+def test_health_endpoint(client):
+    assert client("/health", None)['status'] == 'ok'

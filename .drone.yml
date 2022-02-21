@@ -70,7 +70,6 @@ steps:
     NLP_SERVICE_MODELS_JSON: '{"spacy":["xx_ent_wiki_sm", "en_core_web_sm"],"polyglot":["en", "de", "ro"]}'
     PYTHONPATH: '${PYTHONPATH}:/data/spacy'
     POLYGLOT_DATA_PATH: '/data/'
-
   commands:
   - apt-get update -yqq
   - pip install pipenv > /dev/null

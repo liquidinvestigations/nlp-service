@@ -17,7 +17,7 @@ pyicu = "*"
 morfessor = "*"
 pycld2 = "*"
 numpy = "*"
-
+waitress = "*"
 
 [requires]
 python_version = '3.9'

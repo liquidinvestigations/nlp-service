@@ -250,6 +250,17 @@ def return_config():
     return DOWNLOADED_MODELS, 200
 
 
+@app.route('/health', methods=['GET'])
+def health():
+    """Gets a constant message for the health check.
+
+    Returns:
+        {'status': 'ok'}
+    """
+    log.info('GET /config 200')
+    return {'status': 'ok'}, 200
+
+
 def get_app():
     """returns the app for testing.
 

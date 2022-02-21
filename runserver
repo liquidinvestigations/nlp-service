@@ -9,4 +9,4 @@ fi
 
 #run the server
 echo "starting server"
-gunicorn -b 0.0.0.0:5000 --keep-alive=120 --timeout=7200 --worker-class=gthread app:app
+exec waitress-serve  --port 5000  --threads 20 app:app
