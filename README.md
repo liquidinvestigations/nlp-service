@@ -49,9 +49,6 @@ this example.
 
 - `ENV NLP_SERVICE_PRESET` - Download models from presets
 
-- `ENV GUNICORN_WORKERS` - number of [Gunicorn workers], defaults to 2
-
-- `ENV GUNICORN_THREADS=30` - number of [Gunicorn Threads], defaults to 30
 
 
 The Container automatically tries to download all models which are stored in the
@@ -104,6 +101,4 @@ using Docker:
 [spacymodels]: https://spacy.io/models/
 [polyglot models]: https://polyglot.readthedocs.io/en/latest/NamedEntityRecognition.html
 [iso codes]: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-[Gunicorn Workers]: https://docs.gunicorn.org/en/stable/settings.html#worker-processes
-[Gunicorn Threads]: https://docs.gunicorn.org/en/stable/settings.html#threads
 [`drone` client]: https://docs.drone.io/cli/install/

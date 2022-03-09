@@ -5,8 +5,6 @@ WORKDIR /opt/app/
 
 ENV PYTHONPATH="${PYTHONPATH}:/data/spacy"
 ENV POLYGLOT_DATA_PATH=/data/
-ENV GUNICORN_WORKERS=2
-ENV GUNICORN_THREADS=30
 
 ADD Pipfile Pipfile.lock  ./
 
