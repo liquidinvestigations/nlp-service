@@ -194,10 +194,10 @@ def get_entities():
     if not request.json or 'text' not in request.json:
         log.warning('POST /entity_extraction 400')
         abort(400)
-
     text = request.json['text']
-    if 'lan' in request.json:
-        lan = request.json['lan']
+
+    if 'language' in request.json:
+        lan = request.json['language']
     else:
         lan = get_language(text[:2500])
 
