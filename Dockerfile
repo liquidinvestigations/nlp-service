@@ -28,5 +28,8 @@ ADD presets ./presets
 ENV FLASK_APP app.py
 ENV FLASK_DEBUG 0
 
+ENV NLP_SERVICE_PRESET=full_md
+RUN ./download
+
 EXPOSE 5000
 CMD /opt/app/runserver
