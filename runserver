@@ -7,10 +7,11 @@ if [ -n "$NLP_SERVICE_PRESET" ]; then
   export NLP_SERVICE_MODELS_JSON="$(cat ./presets/$NLP_SERVICE_PRESET.json)"
 fi
 
-#run the server
-echo "starting server"
+# must use sync for timeout to work:
+# https://github.com/benoitc/gunicorn/issues/2695
 exec gunicorn -b 0.0.0.0:5000 \
-  --timeout=3600 \
-  --worker-class=gthread --threads 8 --workers 5 \
-  --max-requests 100 --max-requests-jitter 50 \
+  --name nlp-service \
+  --timeout=600 \
+  --worker-class=sync --workers 8 --threads 1 \
+  --max-requests 40 --max-requests-jitter 30 \
   app:app
