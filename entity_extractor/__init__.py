@@ -23,5 +23,5 @@ def get_app():
 if __name__ == "__main__":
     app.run()
 
-import entity_extractor.views.nlp_entities
-import entity_extractor.views.regex_entities
+import entity_extractor.views.nlp_entities  # noqa: F401
+import entity_extractor.views.regex_entities  # noqa: F401
