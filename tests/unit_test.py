@@ -1,5 +1,5 @@
 import pytest
-import app
+from entity_extractor import app
 import json
 
 # test cases are tuples consisting of (text, language code, model used, number of found entities)
