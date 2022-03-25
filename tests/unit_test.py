@@ -1,5 +1,5 @@
 import pytest
-from entity_extractor import app
+from entity_extractor import app, get_app
 import json
 
 # test cases are tuples consisting of (text, language code, model used, number of found entities)
@@ -9,8 +9,8 @@ with open('tests/data/test_cases.json', 'r') as f:
 
 @pytest.fixture
 def client():
-    app.app.config['TESTING'] = True
-    return lambda endpoint, data, model='': call_nlp_server(app.get_app().test_client(),
+    app.config['TESTING'] = True
+    return lambda endpoint, data, model='': call_nlp_server(get_app().test_client(),
                                                             endpoint, data, model)
 
 
