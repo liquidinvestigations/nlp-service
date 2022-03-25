@@ -5,7 +5,7 @@ import os
 myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + '/../')
 
-from app import get_app
+from entity_extractor import get_app
 
 
 @pytest.fixture

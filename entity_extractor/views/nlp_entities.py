@@ -3,23 +3,16 @@ import os
 import json
 import spacy
 import re
+from entity_extractor import app
 from polyglot.text import Text
 from polyglot.detect import Detector
 from polyglot.detect.base import UnknownLanguage
-from flask import Flask, request, jsonify, abort
+from flask import request, jsonify, abort
+
 
 log = logging.getLogger(__name__)
 
-app = Flask(__name__)
-app.config['JSON_SORT_KEYS'] = False
-app.config['SPACY_MULTILINGUAL_LAN_CODE'] = 'xx'
-app.config['SPACY_MULILINGUAL_LANGUAGES'] = ['nl', 'en', 'fr', 'de', 'it', 'pl', 'pt', 'ru', 'es']
-
-
 DOWNLOADED_MODELS = json.loads(os.getenv('NLP_SERVICE_MODELS_JSON'))
-
-app.config['FALLBACK_LANGUAGE'] = os.getenv('NLP_SERVICE_FALLBACK_LANGUAGE')
-app.config['SPACY_TEXT_LIMIT'] = int(os.getenv('NLP_SPACY_TEXT_LIMIT', default=100000))
 
 # check for loaded spacy languages and store their language code
 if 'spacy' in DOWNLOADED_MODELS:
@@ -259,16 +252,3 @@ def health():
     """
     log.info('GET /config 200')
     return {'status': 'ok'}, 200
-
-
-def get_app():
-    """returns the app for testing.
-
-    Returns:
-        the app, for testing.
-    """
-    return app
-
-
-if __name__ == "__main__":
-    app.run()
