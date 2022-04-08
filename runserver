@@ -12,6 +12,6 @@ fi
 exec gunicorn -b 0.0.0.0:5000 \
   --name nlp-service \
   --timeout=600 \
-  --worker-class=sync --workers 8 --threads 1 \
+  --worker-class=sync --workers $WORKER_COUNT --threads 1 \
   --max-requests 40 --max-requests-jitter 30 \
   app:app
