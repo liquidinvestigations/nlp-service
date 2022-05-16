@@ -1,0 +1,11 @@
+Jieba
+Mecab
+mecab-ko
+mecab-ko-dic
+natto-py
+pymorphy2
+pythainlp
+Pyvi
+spacy-pkuseg
+SudachiPy
+Unidic

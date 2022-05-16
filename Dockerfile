@@ -1,15 +1,19 @@
 FROM python:3.9.1-buster
 
+RUN apt-get update -yqq \
+&& apt-get install libmecab2 libmecab-dev
+
 RUN mkdir /opt/app/
 WORKDIR /opt/app/
 
 ENV PYTHONPATH="${PYTHONPATH}:/data/spacy"
 ENV POLYGLOT_DATA_PATH=/data/
 
-ADD Pipfile Pipfile.lock  ./
+ADD extra-requirements.txt Pipfile Pipfile.lock  ./
 
 RUN pip install pipenv
 RUN pipenv install --system --deploy --ignore-pipfile
+RUN pip install -r extra-requirements.txt
 RUN mkdir /data/
 
 
