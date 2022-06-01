@@ -7,6 +7,8 @@ if [ -n "$NLP_SERVICE_PRESET" ]; then
   export NLP_SERVICE_MODELS_JSON="$(cat ./presets/$NLP_SERVICE_PRESET.json)"
 fi
 
+python app.py test || ( echo "./runserver: test failed!" && sleep 30 && exit 1 )
+
 # must use sync for timeout to work:
 # https://github.com/benoitc/gunicorn/issues/2695
 exec gunicorn -b 0.0.0.0:5000 \

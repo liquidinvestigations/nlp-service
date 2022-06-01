@@ -1,3 +1,4 @@
+import sys
 import logging
 import os
 import json
@@ -271,4 +272,7 @@ def get_app():
 
 
 if __name__ == "__main__":
-    app.run()
+    if len(sys.argv) > 1 and sys.argv[1] == 'server':
+        app.run()
+    else:
+        print('load done.')
